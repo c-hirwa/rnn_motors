@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useOpenState } from "../OpenDot";
 
 export type Slide = { slug: string; title: string; sub: string; url: string; focus: string; alt: string };
 
-export default function Hero({ slides, count }: { slides: Slide[]; count: number }) {
+export default function Hero({ slides, count, makes }: { slides: Slide[]; count: number; makes: number }) {
   const [cur, setCur] = useState(0);
+  const open = useOpenState();
 
   useEffect(() => {
     if (slides.length < 2 || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
@@ -19,9 +21,10 @@ export default function Hero({ slides, count }: { slides: Slide[]; count: number
 
   return (
     <section className="hero" aria-label="Welcome">
+      <span className="shoot" aria-hidden="true" />
       <div className="wrap hero__grid">
         <div className="hero__text">
-          <p className="eyebrow">Lavington · Nairobi</p>
+          <p className="eyebrow">The Retro Hub · Lavington, Nairobi</p>
           <h1 className="hero__title">
             Cars for <span className="metal">everyone.</span>
           </h1>
@@ -30,6 +33,23 @@ export default function Hero({ slides, count }: { slides: Slide[]; count: number
             <Link href="/cars" className="btn btn--primary">Browse {count} cars</Link>
             <Link href="/visit" className="btn btn--ghost">Book a viewing</Link>
           </div>
+          <dl className="hero__facts">
+            <div>
+              <dt>In stock</dt>
+              <dd>{count} cars</dd>
+            </div>
+            <div>
+              <dt>Marques</dt>
+              <dd>{makes} brands</dd>
+            </div>
+            <div>
+              <dt>Showroom</dt>
+              <dd>
+                <span className={`status-dot ${open ? (open.open ? "is-open" : "is-closed") : ""}`} />
+                {open ? open.title.replace(" now", "") : "Mon–Sat"}
+              </dd>
+            </div>
+          </dl>
         </div>
 
         {s && (

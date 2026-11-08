@@ -42,12 +42,18 @@ Business details (phone numbers, WhatsApp, address, opening hours) are in `src/l
 
 ## Pages
 
-- `/`: featured-car slideshow, latest stock, buy / import / hire, location with live "open now" status
+- `/`: featured-car slideshow, marques strip, latest stock, scroll-driven 3D buy / import / hire story, location with live "open now" status
 - `/cars`: showroom with category, search, make and body filters and sorting (shareable URLs)
 - `/cars/[slug]`: one page per car: gallery, price, specs, WhatsApp / call / book-a-viewing, similar cars, SEO metadata
 - `/import`: three short steps and a request form
 - `/hire`: pick a car and send a booking request
 - `/visit`: hours, map and a contact form
+
+## 3D showroom (home page)
+
+The "Buy, import or hire" section turns a 3D car on a turntable as you scroll. three.js and the model (`public/models/concept-car.glb`, ~2 MB) load only when a visitor scrolls near the section, and it renders only while the section is on screen. Visitors with reduced motion get a still view.
+
+The model is ["Car Concept"](https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/CarConcept) by Eric Chadwick / Darmstadt Graphics Group, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). It was modified for this site (Khronos logos removed, repainted silver, simplified and compressed). The licence requires the credit line shown under the section, so keep it if the model stays.
 
 ## Adding a database later
 
