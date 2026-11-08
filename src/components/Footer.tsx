@@ -1,45 +1,44 @@
 import Link from "next/link";
-import { SITE, waLink } from "@/lib/site";
+import { SITE } from "@/lib/site";
 
 export default function Footer() {
   return (
     <footer className="footer">
-      <div className="footer__cta" data-reveal>
-        <p className="eyebrow">Ready when you are</p>
-        <a href={waLink("Hi RNN Motors, I'd like to book a viewing.")} target="_blank" rel="noopener" className="footer__big" data-magnetic>
-          Book a viewing <span>→</span>
-        </a>
-      </div>
-      <div className="footer__cols" data-reveal-group>
-        <div>
-          <h5>Showroom</h5>
-          <p>{SITE.address.line1}<br />Lavington, Nairobi</p>
+      <div className="wrap">
+        <div className="footer__grid">
+          <div className="footer__brand">
+            <Link href="/" className="brand"><span className="brand__rnn">RNN</span><span className="brand__motors">Motors</span></Link>
+            <p>Luxury car sales, importation and chauffeured hire in Lavington, Nairobi. Cars for everyone.</p>
+          </div>
+          <div>
+            <h4>Explore</h4>
+            <ul>
+              <li><Link href="/cars">Showroom</Link></li>
+              <li><Link href="/import">Import a car</Link></li>
+              <li><Link href="/hire">Car hire</Link></li>
+              <li><Link href="/visit">Contact</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Contact</h4>
+            <ul>
+              {SITE.phones.map((p) => <li key={p.tel}><a href={`tel:${p.tel}`}>{p.label}</a></li>)}
+              <li><a href={SITE.instagram} target="_blank" rel="noopener">Instagram</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4>Showroom</h4>
+            <ul>
+              <li>{SITE.address.line1}, Lavington</li>
+              <li>Mon–Fri 9:00–17:00</li>
+              <li>Sat 9:00–13:00</li>
+            </ul>
+          </div>
         </div>
-        <div>
-          <h5>Call</h5>
-          <p>
-            {SITE.phones.map((p) => (
-              <span key={p.tel}><a href={`tel:${p.tel}`}>{p.label}</a><br /></span>
-            ))}
-          </p>
+        <div className="footer__legal">
+          <span>© {new Date().getFullYear()} RNN Motors</span>
+          <Link href="/admin">Staff login</Link>
         </div>
-        <div>
-          <h5>Hours</h5>
-          <p>Mon–Fri 9:00–17:00<br />Sat 9:00–13:00 · Sun closed</p>
-        </div>
-        <div>
-          <h5>Explore</h5>
-          <p>
-            <Link href="/cars">Showroom</Link> · <Link href="/import">Import</Link> · <Link href="/hire">Hire</Link>
-            <br />
-            <a href={SITE.instagram} target="_blank" rel="noopener">Instagram ↗</a>
-          </p>
-        </div>
-      </div>
-      <div className="footer__word" aria-hidden="true">RNN MOTORS</div>
-      <div className="footer__legal">
-        <span>© {new Date().getFullYear()} RNN Motors. Cars for everyone.</span>
-        <span><Link href="/admin">Staff login</Link></span>
       </div>
     </footer>
   );

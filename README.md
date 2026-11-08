@@ -7,7 +7,7 @@ Website and inventory system for **RNN Motors** (The Retro Hub, Ndoto Road, Lavi
 - **Next.js 15** (App Router, React 19, TypeScript, server actions)
 - **Prisma 6 + SQLite** for the local database (switchable to Postgres/Supabase)
 - **sharp** for resizing uploaded photos; **next/image** for responsive, optimised delivery
-- **GSAP + ScrollTrigger** and **Lenis** for animation and smooth scrolling
+- Plain CSS (black & silver theme in `src/app/globals.css`), no animation libraries
 - **jose** (signed session cookies) + **bcryptjs** for the admin login, **zod** for validation
 
 ## Getting started
@@ -32,11 +32,11 @@ Staff log in at **/admin** with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env` (an
 ## What's in it
 
 **Public site**
-- `/`: hero showcase of featured cars, brand marquee, scroll-reveal intro, latest stock, pinned horizontal Signature Collection, services, import process, live "open now" visit section
-- `/cars`: full inventory with category chips, search, make/body/condition/price filters, sort, "show sold", all reflected in the URL so filtered views can be shared
-- `/cars/[slug]`: a page per car with photo gallery (swipe, thumbnails, full-screen zoom), price, key facts, spec sheet, highlights, WhatsApp/call/viewing CTAs, shortlist and share, similar cars, mobile sticky enquiry bar, SEO metadata and `Car` structured data
-- `/import`: six-step process, landed-cost estimator (KRA duty, excise, VAT, IDF/RDL, freight) with an 8-year rule warning, quote request, FAQ
-- `/hire`: occasion → car → details booking builder that saves the request and offers WhatsApp
+- `/`: featured-car slideshow, latest stock, buy / import / hire cards, location with live "open now" status
+- `/cars`: full inventory with category chips, search, make and body filters, sort and "include sold", all reflected in the URL so filtered views can be shared
+- `/cars/[slug]`: a page per car with photo gallery (swipe, thumbnails, full screen), price, key facts, specs, WhatsApp/call/viewing buttons, save and share, similar cars, sticky enquiry bar on phones, SEO metadata and `Car` structured data
+- `/import`: three short steps and a request form
+- `/hire`: pick a car, fill in the booking, send (saved to the inbox, with a WhatsApp option)
 - `/visit`: hours, map, contact form
 - Shortlist (♡) saved in the browser and sent to sales in one WhatsApp message
 - `sitemap.xml` and `robots.txt` generated from the inventory

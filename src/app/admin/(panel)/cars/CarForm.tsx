@@ -228,7 +228,7 @@ export default function CarForm({ car }: { car?: CarInput }) {
             </Field>
             <label className="toggle">
               <input type="checkbox" name="featured" defaultChecked={car?.featured} />
-              <span><strong>Featured</strong><small>Show in the home page hero and Signature Collection</small></span>
+              <span><strong>Featured</strong><small>Shown in the home page slideshow</small></span>
             </label>
             <label className="toggle">
               <input type="checkbox" name="forHire" defaultChecked={car?.forHire} />
@@ -238,7 +238,7 @@ export default function CarForm({ car }: { car?: CarInput }) {
               <div className="prefix"><span>/cars/</span><input name="slug" defaultValue={car?.slug} placeholder={car?.slug ?? autoSlug} /></div>
             </Field>
             <div className="carform__actions">
-              <button className="btn btn--gold btn--block" disabled={pending}>{pending ? "Saving…" : car?.id ? "Save changes" : "Add to inventory"}</button>
+              <button className="btn btn--primary btn--block" disabled={pending}>{pending ? "Saving…" : car?.id ? "Save changes" : "Add to inventory"}</button>
               <Link href="/admin/cars" className="btn btn--ghost btn--block">Cancel</Link>
               {car?.slug && car.status !== "draft" && <a className="link" href={`/cars/${car.slug}`} target="_blank" rel="noopener">View on website ↗</a>}
             </div>

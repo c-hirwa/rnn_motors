@@ -12,7 +12,7 @@ export default function PasswordForm() {
       <label><span>Repeat new password</span><input name="confirm" type="password" autoComplete="new-password" minLength={10} required /></label>
       {state?.error && <p className="aform__error" role="alert">{state.error}</p>}
       {state?.ok && <p className="aform__ok" role="status">✓ Password changed.</p>}
-      <button className="btn btn--gold" disabled={pending}>{pending ? "Saving…" : "Update password"}</button>
+      <button className="btn btn--primary" disabled={pending}>{pending ? "Saving…" : "Update password"}</button>
     </form>
   );
 }

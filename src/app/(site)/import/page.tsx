@@ -1,58 +1,48 @@
 import type { Metadata } from "next";
-import ImportSteps from "@/components/ImportSteps";
-import Estimator from "@/components/Estimator";
+import EnquiryForm from "@/components/EnquiryForm";
 import { waLink } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Car importation to Kenya",
-  description:
-    "Import your exact spec from Japan, the UK, the UAE or Europe. RNN Motors sources, inspects, ships, clears and registers your car. Estimate your landed cost in KES.",
+  title: "Import a car to Kenya",
+  description: "Tell RNN Motors the car you want. We source it abroad, ship it, clear it and register it in Nairobi.",
 };
 
-const POPULAR = [
-  "Mercedes-Maybach GLS 600", "Bentley Bentayga", "Porsche Taycan", "Mercedes-AMG G 63",
-  "Audi A8 S-line", "Range Rover Autobiography", "Aston Martin DBX", "Toyota Land Cruiser 300",
-];
-
-const FAQ = [
-  ["How long does an import take?", "Typically 6 to 10 weeks from deposit to handover, depending on the origin market, shipping schedules and port clearance."],
-  ["Can I import a car older than 8 years?", "Kenya generally restricts imports to vehicles less than 8 years from the year of first registration. We'll check eligibility before you commit."],
-  ["How is duty calculated?", "KRA uses its Current Retail Selling Price (CRSP) schedule for the model, then applies import duty, excise duty, VAT and levies. Our estimator gives a rough figure; we'll quote exactly."],
-  ["Do I pay everything upfront?", "No. We agree a deposit to secure the car, with the balance due before shipping or clearance. Talk to us about the schedule."],
+const STEPS = [
+  ["Tell us what you want", "Make, model, year, colour and budget."],
+  ["We find and check it", "We source it from trusted sellers abroad and inspect it before buying."],
+  ["We deliver it", "Shipping, clearing and registration handled. You collect it ready to drive."],
 ];
 
 export default function ImportPage() {
   return (
-    <section className="page import">
-      <header className="page__head">
-        <p className="eyebrow"><span className="line" /> Importation</p>
-        <h1 className="h1">Your exact spec, <em>delivered</em> to Nairobi.</h1>
-        <p className="page__lede">
-          Japan, the UK, the UAE or Europe. We handle the whole chain, from finding the car to putting Kenyan plates on it.
-        </p>
-      </header>
+    <div className="page">
+      <div className="wrap">
+        <header className="page__head">
+          <p className="eyebrow">Importation</p>
+          <h1 className="h1">Import a car</h1>
+          <p>Can&apos;t find it in our showroom? We&apos;ll bring it in from Japan, the UK, the UAE or Europe.</p>
+        </header>
 
-      <ImportSteps />
-      <Estimator />
-
-      <div className="sourcing" data-reveal>
-        <p className="eyebrow">Often requested</p>
-        <div className="sourcing__chips">
-          {POPULAR.map((s) => (
-            <a key={s} href={waLink(`Hi RNN Motors, can you import a ${s} for me? I'd like to discuss spec and budget.`)} target="_blank" rel="noopener">{s} ↗</a>
+        <ol className="steps3">
+          {STEPS.map(([h, p], i) => (
+            <li key={h}><b>{i + 1}</b><h3>{h}</h3><p>{p}</p></li>
           ))}
-        </div>
-      </div>
+        </ol>
 
-      <div className="faq" data-reveal-group>
-        <h2 className="h3">Questions we get asked</h2>
-        {FAQ.map(([q, a]) => (
-          <details key={q}>
-            <summary>{q}<span aria-hidden="true">+</span></summary>
-            <p>{a}</p>
-          </details>
-        ))}
+        <section className="panel split">
+          <div>
+            <h2 className="h2">Request a car</h2>
+            <p>Share the details and we&apos;ll come back with options and a full price, including duty and delivery.</p>
+          </div>
+          <EnquiryForm
+            type="import"
+            messageLabel="Which car are you looking for?"
+            message=""
+            submitLabel="Send request"
+            waHref={waLink("Hi RNN Motors, I'd like to import a car: ")}
+          />
+        </section>
       </div>
-    </section>
+    </div>
   );
 }

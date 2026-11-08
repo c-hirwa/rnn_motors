@@ -25,7 +25,7 @@ export default function LoginForm({ next }: { next: string }) {
         <input name="password" type="password" autoComplete="current-password" required />
       </label>
       {state?.error && <p className="aform__error" role="alert">{state.error}</p>}
-      <button className="btn btn--gold btn--block" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>
+      <button className="btn btn--primary btn--block" disabled={pending}>{pending ? "Signing in…" : "Sign in"}</button>
     </form>
   );
 }

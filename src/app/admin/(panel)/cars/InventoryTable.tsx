@@ -57,7 +57,7 @@ export default function InventoryTable({ rows, initialStatus }: { rows: Row[]; i
               <th>Status</th>
               <th>Price</th>
               <th className="hide-sm">Mileage</th>
-              <th className="hide-sm" title="Shown in the home page hero and Signature Collection">Featured</th>
+              <th className="hide-sm" title="Shown in the home page slideshow">Featured</th>
               <th className="hide-sm">For hire</th>
               <th className="hide-sm">Leads</th>
               <th />

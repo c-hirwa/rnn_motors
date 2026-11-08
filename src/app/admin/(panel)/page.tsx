@@ -37,7 +37,7 @@ export default async function Dashboard() {
           <h1>Dashboard</h1>
           <p>What's on the floor and who's asking about it.</p>
         </div>
-        <Link href="/admin/cars/new" className="btn btn--gold btn--sm">+ Add a car</Link>
+        <Link href="/admin/cars/new" className="btn btn--primary btn--sm">+ Add a car</Link>
       </header>
 
       <div className="stats">

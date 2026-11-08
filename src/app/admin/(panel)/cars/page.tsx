@@ -24,7 +24,7 @@ export default async function CarsAdmin({ searchParams }: { searchParams: Promis
           <h1>Inventory</h1>
           <p>{cars.length} cars in total. Change status, feature cars on the home page, or open one to edit.</p>
         </div>
-        <Link href="/admin/cars/new" className="btn btn--gold btn--sm">+ Add a car</Link>
+        <Link href="/admin/cars/new" className="btn btn--primary btn--sm">+ Add a car</Link>
       </header>
       {sp.saved && <div className="notice">✓ Saved {sp.saved}. Changes are live on the website.</div>}
       <InventoryTable rows={rows} initialStatus={sp.status ?? "all"} />
