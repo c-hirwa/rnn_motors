@@ -1,8 +1,8 @@
 /* =========================================================
    RNN Admin — practical, calm, on-brand
    ========================================================= */
-body:has(.admin), body:has(.login){background:#0e0e10}
-body:has(.admin)::after, body:has(.login)::after{display:none}
+body:has(.admin){background:#0e0e10}
+body:has(.admin)::before, body:has(.admin)::after{display:none}
 
 .admin{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh;font-size:14px}
 .admin__main{padding:32px clamp(16px,3vw,44px) 80px;max-width:1400px;width:100%}

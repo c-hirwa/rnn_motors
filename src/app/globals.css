@@ -37,7 +37,7 @@
 
 *,*::before,*::after{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%;background:var(--bg);scroll-behavior:smooth}
-body{margin:0;background:var(--bg);color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+body{margin:0;background:transparent;color:var(--text);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
 img{display:block;max-width:100%}
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;padding:0}
@@ -50,10 +50,61 @@ p{margin:0}
 .hp{position:absolute!important;left:-9999px;width:1px;height:1px;opacity:0}
 .muted{color:var(--muted)}
 
+/* ---------- starry sky ----------
+   A nod to the showroom's star-lit ceiling. Two static layers of tiny
+   stars (tile sizes chosen so the pattern doesn't visibly repeat) plus
+   a sparse layer that twinkles very slowly. Fixed behind all content,
+   brighter near the top of the screen and fading towards the bottom. */
+body::before,body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  -webkit-mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.2) 100%);
+  mask-image:linear-gradient(180deg,#000 0%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.2) 100%);
+}
+body::before{
+  opacity:.6;
+  background-image:
+    radial-gradient(circle at 104px 48px,rgba(255,255,255,0.48) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 171px 117px,rgba(255,255,255,0.65) 0 0.6px,transparent 1.3px),
+    radial-gradient(circle at 12px 139px,rgba(255,255,255,0.49) 0 0.6px,transparent 1.3px),
+    radial-gradient(circle at 136px 265px,rgba(255,255,255,0.54) 0 0.6px,transparent 1.3px),
+    radial-gradient(circle at 201px 303px,rgba(255,255,255,0.61) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 312px 15px,rgba(255,255,255,0.57) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 46px 38px,rgba(255,255,255,0.78) 0 0.7px,transparent 1.4px),
+    radial-gradient(circle at 58px 186px,rgba(255,255,255,0.6) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 175px 20px,rgba(255,255,255,0.53) 0 0.6px,transparent 1.3px),
+    radial-gradient(circle at 218px 137px,rgba(255,255,255,0.68) 0 0.7px,transparent 1.4px),
+    radial-gradient(circle at 145px 96px,rgba(255,255,255,0.73) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 78px 184px,rgba(255,255,255,0.8) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 233px 92px,rgba(255,255,255,0.5) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 134px 242px,rgba(255,255,255,0.65) 0 0.6px,transparent 1.3px),
+    radial-gradient(circle at 13px 214px,rgba(255,255,255,0.68) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 280px 100px,rgba(255,255,255,0.69) 0 0.8px,transparent 1.5px),
+    radial-gradient(circle at 186px 146px,rgba(255,255,255,0.83) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 152px 213px,rgba(255,255,255,0.73) 0 0.6px,transparent 1.3px);
+  background-size:320px 320px;
+}
+body::after{
+  opacity:.5;
+  background-image:
+    radial-gradient(circle at 362px 556px,rgba(255,255,255,0.79) 0 1.2px,transparent 1.9px),
+    radial-gradient(circle at 216px 374px,rgba(255,255,255,0.84) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 94px 66px,rgba(255,255,255,0.93) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 72px 139px,rgba(255,255,255,0.96) 0 1.1px,transparent 1.8px),
+    radial-gradient(circle at 45px 252px,rgba(255,255,255,0.97) 0 1.1px,transparent 1.8px),
+    radial-gradient(circle at 459px 484px,rgba(255,255,255,0.82) 0 1.0px,transparent 1.7px),
+    radial-gradient(circle at 201px 495px,rgba(255,255,255,0.75) 0 1.3px,transparent 2.0px),
+    radial-gradient(circle at 99px 130px,rgba(255,255,255,0.85) 0 1.0px,transparent 1.7px),
+    radial-gradient(circle at 330px 147px,rgba(255,255,255,0.83) 0 0.9px,transparent 1.6px),
+    radial-gradient(circle at 207px 317px,rgba(255,255,255,0.91) 0 1.3px,transparent 2.0px);
+  background-size:560px 560px;
+  animation:twinkle 7s ease-in-out infinite alternate;
+}
+@keyframes twinkle{from{opacity:.3}to{opacity:.8}}
+
 /* ---------- layout ---------- */
 .wrap{width:100%;max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
 .section{padding:clamp(56px,7vw,96px) 0}
-.section--alt{background:var(--surface);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.section--alt{background:rgba(19,19,20,.72);border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
 .page{padding:calc(var(--nav-h) + clamp(32px,4vw,56px)) 0 clamp(56px,7vw,96px);min-height:70vh}
 .page__head{margin-bottom:clamp(28px,3.5vw,44px);max-width:720px}
 .page__head p{color:var(--text-2);font-size:16px;margin-top:12px}
@@ -310,7 +361,7 @@ p{margin:0}
 .visit__map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) invert(.9) contrast(.9)}
 
 /* ---------- footer ---------- */
-.footer{border-top:1px solid var(--line);background:var(--surface);padding:48px 0 24px;font-size:14px}
+.footer{border-top:1px solid var(--line);background:rgba(19,19,20,.8);padding:48px 0 24px;font-size:14px}
 .footer__grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:28px}
 .footer__brand p{color:var(--text-2);margin-top:12px;max-width:300px}
 .footer h4{font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--silver-lo);margin-bottom:12px}
@@ -381,5 +432,6 @@ p{margin:0}
 }
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{transition-duration:.01ms!important;animation-duration:.01ms!important}
+  body::after{animation:none}
   html{scroll-behavior:auto}
 }
