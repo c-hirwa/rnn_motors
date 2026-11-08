@@ -1,0 +1,94 @@
+// RNN Motors data model.
+// SQLite for local development. To move to Supabase/Postgres, change
+// `provider` to "postgresql" and point DATABASE_URL at the Postgres database.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Car {
+  id           String    @id @default(cuid())
+  slug         String    @unique
+  make         String
+  model        String
+  year         Int?
+  /// exotic | executive | utility
+  category     String
+  body         String
+  colour       String
+  interior     String?
+  engine       String?
+  power        String?
+  transmission String?
+  drive        String?
+  fuel         String?
+  mileageKm    Int?
+  /// new | foreign-used | locally-used
+  condition    String?
+  /// Whole Kenyan shillings. Null = "Price on request".
+  priceKes     Int?
+  /// draft | available | reserved | sold
+  status       String    @default("available")
+  featured     Boolean   @default(false)
+  forHire      Boolean   @default(false)
+  description  String    @default("")
+  /// One feature per line
+  features     String    @default("")
+  soldAt       DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  photos    Photo[]
+  enquiries Enquiry[]
+
+  @@index([status])
+  @@index([category])
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  carId     String
+  car       Car      @relation(fields: [carId], references: [id], onDelete: Cascade)
+  /// File key inside storage/uploads
+  key       String
+  width     Int
+  height    Int
+  position  Int      @default(0)
+  /// CSS object-position, e.g. "50% 60%"
+  focus     String   @default("50% 50%")
+  createdAt DateTime @default(now())
+
+  @@index([carId, position])
+}
+
+model Enquiry {
+  id        String   @id @default(cuid())
+  /// car | viewing | hire | import | general
+  type      String
+  name      String
+  phone     String
+  email     String?
+  message   String   @default("")
+  /// JSON with extra details (hire date, import spec, …)
+  details   String   @default("{}")
+  /// new | contacted | closed
+  status    String   @default("new")
+  carId     String?
+  car       Car?     @relation(fields: [carId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+
+  @@index([status, createdAt])
+}
+
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  name         String   @default("Admin")
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

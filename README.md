@@ -1,31 +1,76 @@
-# RNN Motors — website concept
+# RNN Motors
 
-A redesigned site for **RNN Motors** (The Retro Hub, Ndoto Road, Lavington, Nairobi): luxury car sales, custom importation and chauffeured car hire.
+Website and inventory system for **RNN Motors** (The Retro Hub, Ndoto Road, Lavington, Nairobi): luxury car sales, custom importation and chauffeured car hire.
 
-Static HTML/CSS/JS, no build step. Uses GSAP + ScrollTrigger and Lenis from CDNs.
+## Stack
 
-## Run locally
+- **Next.js 15** (App Router, React 19, TypeScript, server actions)
+- **Prisma 6 + SQLite** for the local database (switchable to Postgres/Supabase)
+- **sharp** for resizing uploaded photos; **next/image** for responsive, optimised delivery
+- **GSAP + ScrollTrigger** and **Lenis** for animation and smooth scrolling
+- **jose** (signed session cookies) + **bcryptjs** for the admin login, **zod** for validation
+
+## Getting started
 
 ```bash
-python -m http.server 5173
+npm install
+cp .env.example .env      # then set AUTH_SECRET, ADMIN_EMAIL, ADMIN_PASSWORD
+npm run setup             # creates prisma/dev.db and seeds the current stock + admin account
+npm run dev               # http://localhost:3000
 ```
 
-Then open http://localhost:5173.
+Staff log in at **/admin** with `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `.env` (and can change the password under Settings).
+
+| Script | What it does |
+| --- | --- |
+| `npm run dev` | Development server |
+| `npm run build` / `npm start` | Production build and server |
+| `npm run db:seed` | Adds any missing seed cars and the admin account |
+| `npm run db:reset` | Wipes cars, photos and enquiries, then reseeds |
+| `npm run typecheck` | TypeScript check |
 
 ## What's in it
 
-- **Hero**: auto-advancing showcase of signature cars with progress bars, Ken Burns motion and parallax
-- **Showroom**: live filter + search, 3D tilt cards, detail modal with hover-zoom, keyboard nav, and per-car WhatsApp enquiry
-- **Shortlist**: heart cars, then send the whole list to the sales team in one WhatsApp message (saved in the browser)
-- **Signature Collection**: pinned horizontal scroll on desktop, swipe carousel on mobile
-- **Import**: animated 6-step process and a landed-cost estimator (KRA duty, excise, VAT, IDF/RDL, freight) with an 8-year age-rule warning
-- **Hire**: occasion → car → details booking builder that writes a pre-filled WhatsApp request
-- **Visit**: live "open now" status in Nairobi time, today's hours highlighted, dark-styled map
+**Public site**
+- `/`: hero showcase of featured cars, brand marquee, scroll-reveal intro, latest stock, pinned horizontal Signature Collection, services, import process, live "open now" visit section
+- `/cars`: full inventory with category chips, search, make/body/condition/price filters, sort, "show sold", all reflected in the URL so filtered views can be shared
+- `/cars/[slug]`: a page per car with photo gallery (swipe, thumbnails, full-screen zoom), price, key facts, spec sheet, highlights, WhatsApp/call/viewing CTAs, shortlist and share, similar cars, mobile sticky enquiry bar, SEO metadata and `Car` structured data
+- `/import`: six-step process, landed-cost estimator (KRA duty, excise, VAT, IDF/RDL, freight) with an 8-year rule warning, quote request, FAQ
+- `/hire`: occasion → car → details booking builder that saves the request and offers WhatsApp
+- `/visit`: hours, map, contact form
+- Shortlist (♡) saved in the browser and sent to sales in one WhatsApp message
+- `sitemap.xml` and `robots.txt` generated from the inventory
 
-## Editing content
+**Admin (`/admin`)**
+- Dashboard: available / reserved / sold-this-month counts, listed stock value, new enquiries, listings missing price/mileage/photos, most-enquired cars
+- Inventory: search, status tabs, inline status change, featured ★ and for-hire toggles, duplicate, delete
+- Add / edit car: all specs, price (blank = "Price on request"), status (draft/available/reserved/sold), multi-photo upload with drag-and-drop, reordering, cover photo and click-to-set focal point
+- Enquiries inbox: every form submission (car, viewing, hire, import, general) with call/WhatsApp links, details, and new → contacted → closed tracking
 
-- Cars live in `js/data.js`. Add an object and drop the photo in `assets/cars/`.
-- Specs marked "On request" are unknown and should be filled in by the sales team.
-- Estimator rates and freight assumptions are at the top of the IMPORT section in `js/main.js`.
+## Where things live
 
-Photos are RNN Motors' own stock images, taken from their current website.
+```
+prisma/schema.prisma     data model (Car, Photo, Enquiry, User)
+prisma/seed.ts           current stock + first admin
+prisma/seed-images/      RNN's own photos used by the seed
+src/app/(site)/          public pages
+src/app/admin/           admin panel + server actions
+src/components/          UI components
+src/lib/                 db, auth, storage, formatting, site constants (phones, hours…)
+storage/uploads/         uploaded photos (git-ignored), served at /media/<key>
+```
+
+Business details (phone numbers, WhatsApp, address, opening hours) are in `src/lib/site.ts`. Import-estimator rates are at the top of `src/components/Estimator.tsx`.
+
+## Moving to hosting later
+
+The app is written so the local pieces can be swapped without touching pages:
+
+1. **Database:** change `provider` in `prisma/schema.prisma` to `postgresql`, set `DATABASE_URL` to a Postgres database (e.g. Supabase), run `npx prisma db push` and `npm run db:seed`.
+2. **Photos:** replace the three functions in `src/lib/storage.ts` with Supabase Storage / S3 calls.
+3. **Rate limits:** the login and enquiry limits are in memory; use a shared store (e.g. Redis/Upstash) when running more than one server.
+
+## Notes
+
+- Seeded specs are indicative manufacturer figures. Prices and mileage are intentionally blank for the sales team to fill in.
+- Photos are RNN Motors' own stock images, taken from their previous website.
