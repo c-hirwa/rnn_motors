@@ -1,9 +1,16 @@
 import type { Metadata, Viewport } from "next";
-import { Manrope } from "next/font/google";
+import localFont from "next/font/local";
 import { SITE } from "@/lib/site";
 import "./globals.css";
 
-const sans = Manrope({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-sans", display: "swap" });
+// Manrope (variable, 400–700, Latin) is bundled in the repo so builds never depend on fetching from Google Fonts.
+const sans = localFont({
+  src: "./fonts/manrope-latin.woff2",
+  weight: "400 700",
+  variable: "--font-sans",
+  display: "swap",
+  fallback: ["system-ui", "Segoe UI", "Arial", "sans-serif"],
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
