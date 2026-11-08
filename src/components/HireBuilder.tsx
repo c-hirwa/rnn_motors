@@ -4,7 +4,6 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import type { CardCar } from "@/lib/cars";
 import { carName } from "@/lib/format";
-import { waLink } from "@/lib/site";
 import EnquiryForm from "./EnquiryForm";
 
 const OCCASIONS = ["Wedding", "Airport transfer", "Corporate event", "Upcountry trip", "Other"];
@@ -24,10 +23,6 @@ export default function HireBuilder({ fleet, initialCar }: { fleet: CardCar[]; i
 
   const car = fleet.find((c) => c.id === carId) ?? fleet[0];
   if (!car) return <p className="muted">Our hire fleet is being updated. Please call us for availability.</p>;
-
-  const wa = waLink(
-    `Hi RNN Motors, I'd like to hire the ${carName(car)}.\n• Occasion: ${occasion}\n• Date: ${date}\n• Duration: ${duration}\n• Pick-up: ${pickup || "To confirm"}`
-  );
 
   return (
     <div className="hire__layout">
@@ -63,13 +58,10 @@ export default function HireBuilder({ fleet, initialCar }: { fleet: CardCar[]; i
           </label>
         </div>
         <EnquiryForm
-          type="hire"
-          carId={car.id}
-          compact
-          details={{ occasion, date, duration, pickup }}
+          intro={`I'd like to hire the ${carName(car)} with a chauffeur.`}
+          details={{ Occasion: occasion, Date: date, Duration: duration, "Pick-up": pickup || "To confirm" }}
           messageLabel="Anything else? (optional)"
-          submitLabel="Request booking"
-          waHref={wa}
+          submitLabel="Request booking on WhatsApp"
         />
       </div>
     </div>

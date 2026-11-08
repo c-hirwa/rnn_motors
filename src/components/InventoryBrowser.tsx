@@ -51,8 +51,8 @@ export default function InventoryBrowser({ cars }: { cars: CardCar[] }) {
       return true;
     });
     const by: Record<Sort, (a: CardCar, b: CardCar) => number> = {
-      featured: (a, b) => Number(b.featured) - Number(a.featured) || b.createdAt.localeCompare(a.createdAt),
-      newest: (a, b) => b.createdAt.localeCompare(a.createdAt),
+      featured: (a, b) => Number(b.featured) - Number(a.featured) || b.added.localeCompare(a.added),
+      newest: (a, b) => b.added.localeCompare(a.added),
       "price-asc": (a, b) => (a.priceKes ?? Infinity) - (b.priceKes ?? Infinity),
       "price-desc": (a, b) => (b.priceKes ?? -1) - (a.priceKes ?? -1),
       "year-desc": (a, b) => (b.year ?? 0) - (a.year ?? 0),

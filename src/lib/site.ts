@@ -1,7 +1,10 @@
 export const SITE = {
   name: "RNN Motors",
   tagline: "Cars for everyone",
-  url: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
+  // Your own domain if set; otherwise the Vercel production domain (set automatically by Vercel).
+  url:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}` : "http://localhost:3000"),
   phones: [
     { label: "+254 794 861101", tel: "+254794861101" },
     { label: "+254 723 766 766", tel: "+254723766766" },

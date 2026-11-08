@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CARS } from "@/data/cars";
 import { getCarBySlug, similarCars, toCard } from "@/lib/cars";
-import { CONDITIONS, carName, carTitle, km, mediaUrl, priceLabel } from "@/lib/format";
+import { CONDITIONS, carName, carTitle, km, priceLabel } from "@/lib/format";
 import { SITE, waLink } from "@/lib/site";
 import Gallery from "@/components/Gallery";
 import CarCard from "@/components/CarCard";
@@ -10,12 +11,14 @@ import EnquiryForm from "@/components/EnquiryForm";
 import { CarActions, StickyBar } from "@/components/CarActions";
 import { WaIcon } from "@/components/WaFloat";
 
-export const revalidate = 300;
-
 type Props = { params: Promise<{ slug: string }> };
 
+// Every car page is built ahead of time.
+export const dynamicParams = false;
+export const generateStaticParams = () => CARS.map((c) => ({ slug: c.slug }));
+
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const car = await getCarBySlug((await params).slug);
+  const car = getCarBySlug((await params).slug);
   if (!car) return { title: "Car not found" };
   const description = `${car.colour} ${carTitle(car)}${car.mileageKm != null ? `, ${km(car.mileageKm)}` : ""}. ${priceLabel(car.priceKes)}. ${car.description}`.slice(0, 300);
   const img = car.photos[0];
@@ -23,14 +26,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${carTitle(car)} for sale in Nairobi`,
     description,
     alternates: { canonical: `/cars/${car.slug}` },
-    openGraph: { title: `${carTitle(car)} | RNN Motors`, description, images: img ? [{ url: mediaUrl(img.key), width: img.width, height: img.height }] : [] },
+    openGraph: { title: `${carTitle(car)} | RNN Motors`, description, images: img ? [{ url: img.src, width: img.width, height: img.height }] : [] },
   };
 }
 
 export default async function CarPage({ params }: Props) {
-  const car = await getCarBySlug((await params).slug);
+  const car = getCarBySlug((await params).slug);
   if (!car) notFound();
-  const similar = (await similarCars(car)).map(toCard);
+  const similar = similarCars(car).map(toCard);
   const name = carName(car);
   const title = carTitle(car);
   const sold = car.status === "sold";
@@ -39,15 +42,15 @@ export default async function CarPage({ params }: Props) {
   const waText = sold
     ? `Hi RNN Motors, I saw the ${title} on your website. Can you find me one like it?\n${url}`
     : `Hi RNN Motors, I'm interested in the ${title} (${car.colour}). Is it still available?\n${url}`;
-  const photos = car.photos.map((p) => ({ url: mediaUrl(p.key), focus: p.focus, width: p.width, height: p.height }));
-  const features = car.features.split("\n").map((f) => f.trim()).filter(Boolean);
+  const photos = car.photos.map((p) => ({ url: p.src, focus: p.focus, width: p.width, height: p.height }));
+  const features = car.features ?? [];
 
   // Only show specs we actually have.
   const specs = (
     [
       ["Year", car.year?.toString()],
       ["Mileage", km(car.mileageKm)],
-      ["Condition", car.condition ? CONDITIONS[car.condition as keyof typeof CONDITIONS] : null],
+      ["Condition", car.condition ? CONDITIONS[car.condition] : null],
       ["Engine", car.engine],
       ["Power", car.power],
       ["Transmission", car.transmission],
@@ -74,7 +77,7 @@ export default async function CarPage({ params }: Props) {
     vehicleModelDate: car.year ?? undefined,
     color: car.colour,
     bodyType: car.body,
-    fuelType: car.fuel ?? undefined,
+    fuelType: car.fuel,
     mileageFromOdometer: car.mileageKm != null ? { "@type": "QuantitativeValue", value: car.mileageKm, unitCode: "KMT" } : undefined,
     image: photos.map((p) => SITE.url + p.url),
     description: car.description,
@@ -134,7 +137,7 @@ export default async function CarPage({ params }: Props) {
               </div>
             )}
             {car.forHire && !sold && <Link className="car__hire" href={`/hire?car=${car.slug}`}>Also available for chauffeured hire →</Link>}
-            <CarActions item={{ id: car.id, slug: car.slug, name, make: car.make, model: car.model, img: photos[0]?.url ?? null }} />
+            <CarActions item={{ id: car.slug, slug: car.slug, name, make: car.make, model: car.model, img: photos[0]?.url ?? null }} />
           </aside>
         </div>
 
@@ -158,9 +161,9 @@ export default async function CarPage({ params }: Props) {
           <section className="panel split" id="enquire" style={{ marginTop: "clamp(40px,5vw,64px)", scrollMarginTop: "calc(var(--nav-h) + 20px)" }}>
             <div>
               <h2 className="h2">Book a viewing</h2>
-              <p>Leave your details and we&apos;ll call to confirm a time at our Lavington showroom.</p>
+              <p>Pick a day and we&apos;ll confirm a time at our Lavington showroom.</p>
             </div>
-            <EnquiryForm type="viewing" carId={car.id} showDate message={`I'd like to view the ${title}.`} submitLabel="Request viewing" />
+            <EnquiryForm intro={`I'd like to book a viewing of the ${title}.\n${url}`} showDate messageLabel="Anything else? (optional)" submitLabel="Request viewing on WhatsApp" />
           </section>
         )}
 

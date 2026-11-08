@@ -37,7 +37,7 @@ export default function Footer() {
         </div>
         <div className="footer__legal">
           <span>© {new Date().getFullYear()} RNN Motors</span>
-          <Link href="/admin">Staff login</Link>
+          <a href={SITE.instagram} target="_blank" rel="noopener">Instagram</a>
         </div>
       </div>
     </footer>

@@ -1,47 +1,24 @@
-import "server-only";
-import type { Prisma } from "@prisma/client";
-import { db } from "./db";
+import { CARS, type Car } from "@/data/cars";
 
-export const withPhotos = { photos: { orderBy: { position: "asc" } } } satisfies Prisma.CarInclude;
-export type CarWithPhotos = Prisma.CarGetPayload<{ include: typeof withPhotos }>;
+export type { Car };
 
-/** Cars visible on the public site (never drafts). */
-const publicWhere = (includeSold = false): Prisma.CarWhereInput => ({
-  status: { in: includeSold ? ["available", "reserved", "sold"] : ["available", "reserved"] },
-});
-
+/** Cars shown in the showroom (sold cars only when asked for). */
 export const listPublicCars = (includeSold = false) =>
-  db.car.findMany({
-    where: publicWhere(includeSold),
-    include: withPhotos,
-    orderBy: [{ featured: "desc" }, { createdAt: "desc" }],
-  });
+  [...CARS]
+    .filter((c) => includeSold || c.status !== "sold")
+    .sort((a, b) => Number(!!b.featured) - Number(!!a.featured) || b.added.localeCompare(a.added));
 
-export const featuredCars = () =>
-  db.car.findMany({
-    where: { ...publicWhere(), featured: true },
-    include: withPhotos,
-    orderBy: { updatedAt: "desc" },
-    take: 6,
-  });
+export const featuredCars = () => listPublicCars().filter((c) => c.featured).slice(0, 6);
 
-export const hireFleet = () =>
-  db.car.findMany({
-    where: { forHire: true, status: { not: "draft" } },
-    include: withPhotos,
-    orderBy: { createdAt: "asc" },
-  });
+export const hireFleet = () => CARS.filter((c) => c.forHire && c.status !== "sold");
 
-export const getCarBySlug = (slug: string) =>
-  db.car.findFirst({ where: { slug, status: { not: "draft" } }, include: withPhotos });
+export const getCarBySlug = (slug: string) => CARS.find((c) => c.slug === slug) ?? null;
 
-export async function similarCars(car: { id: string; category: string; make: string }) {
-  const list = await db.car.findMany({
-    where: { ...publicWhere(), id: { not: car.id }, OR: [{ category: car.category }, { make: car.make }] },
-    include: withPhotos,
-    take: 8,
-  });
-  return list.sort((a, b) => Number(b.make === car.make) - Number(a.make === car.make)).slice(0, 3);
+export function similarCars(car: Car) {
+  return listPublicCars()
+    .filter((c) => c.slug !== car.slug && (c.category === car.category || c.make === car.make))
+    .sort((a, b) => Number(b.make === car.make) - Number(a.make === car.make))
+    .slice(0, 3);
 }
 
 /** Lightweight, serialisable shape passed to client components. */
@@ -57,18 +34,16 @@ export type CardCar = {
   power: string | null;
   fuel: string | null;
   mileageKm: number | null;
-  condition: string | null;
   priceKes: number | null;
   status: string;
   forHire: boolean;
   featured: boolean;
-  description: string;
-  createdAt: string;
+  added: string;
   photo: { url: string; focus: string; width: number; height: number } | null;
 };
 
-export const toCard = (c: CarWithPhotos): CardCar => ({
-  id: c.id,
+export const toCard = (c: Car): CardCar => ({
+  id: c.slug,
   slug: c.slug,
   make: c.make,
   model: c.model,
@@ -76,17 +51,13 @@ export const toCard = (c: CarWithPhotos): CardCar => ({
   category: c.category,
   body: c.body,
   colour: c.colour,
-  power: c.power,
-  fuel: c.fuel,
+  power: c.power ?? null,
+  fuel: c.fuel ?? null,
   mileageKm: c.mileageKm,
-  condition: c.condition,
   priceKes: c.priceKes,
   status: c.status,
-  forHire: c.forHire,
-  featured: c.featured,
-  description: c.description,
-  createdAt: c.createdAt.toISOString(),
-  photo: c.photos[0]
-    ? { url: `/media/${c.photos[0].key}`, focus: c.photos[0].focus, width: c.photos[0].width, height: c.photos[0].height }
-    : null,
+  forHire: !!c.forHire,
+  featured: !!c.featured,
+  added: c.added,
+  photo: c.photos[0] ? { url: c.photos[0].src, focus: c.photos[0].focus, width: c.photos[0].width, height: c.photos[0].height } : null,
 });

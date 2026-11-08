@@ -22,9 +22,9 @@ export default function VisitPage() {
         <section className="panel split" style={{ marginTop: "clamp(40px,5vw,64px)" }}>
           <div>
             <h2 className="h2">Send a message</h2>
-            <p>Questions about a car, trade-ins or financing? We usually reply the same working day.</p>
+            <p>Questions about a car, trade-ins or financing? Send us a message on WhatsApp and we usually reply the same working day.</p>
           </div>
-          <EnquiryForm type="general" submitLabel="Send message" />
+          <EnquiryForm intro="I have a question." submitLabel="Send on WhatsApp" />
         </section>
       </div>
     </div>

@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { hireFleet, toCard } from "@/lib/cars";
 import HireBuilder from "@/components/HireBuilder";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Luxury car hire in Nairobi",

@@ -5,7 +5,6 @@ import Hero, { type Slide } from "@/components/home/Hero";
 import CarCard from "@/components/CarCard";
 import Visit from "@/components/Visit";
 
-export const revalidate = 300;
 
 const SERVICES = [
   {

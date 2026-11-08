@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import { listPublicCars, toCard } from "@/lib/cars";
 import InventoryBrowser from "@/components/InventoryBrowser";
 
-export const revalidate = 300;
 
 export const metadata: Metadata = {
   title: "Showroom: luxury cars for sale in Nairobi",

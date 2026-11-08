@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import EnquiryForm from "@/components/EnquiryForm";
-import { waLink } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Import a car to Kenya",
@@ -35,11 +34,9 @@ export default function ImportPage() {
             <p>Share the details and we&apos;ll come back with options and a full price, including duty and delivery.</p>
           </div>
           <EnquiryForm
-            type="import"
-            messageLabel="Which car are you looking for?"
-            message=""
-            submitLabel="Send request"
-            waHref={waLink("Hi RNN Motors, I'd like to import a car: ")}
+            intro="I'd like you to import a car for me."
+            messageLabel="Which car are you looking for? (make, model, year, budget)"
+            submitLabel="Send request on WhatsApp"
           />
         </section>
       </div>
